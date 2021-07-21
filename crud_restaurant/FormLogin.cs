@@ -30,7 +30,15 @@ namespace crud_restaurant
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            login();
+            if (txb_email.Text != "" && txb_password.Text != "")
+            {
+                login();
+            }
+            else
+            {
+                MessageBox.Show("Harap isi email dan password","Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            
         }
 
         private void txb_password_KeyDown(object sender, KeyEventArgs e)
@@ -52,14 +60,21 @@ namespace crud_restaurant
                 reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    if (Convert.ToString(reader["position"]) == "Admin")
+                    if (Convert.ToString(reader["position"]) == "admin")
                     {
                         this.Hide();
                         FormAdmin formAdmin = new FormAdmin();
                         formAdmin.FormClosed += (s, args) => this.Close();
                         formAdmin.Show();
                     }
-                    if (Convert.ToString(reader["position"]) == "Kasir")
+                    if (Convert.ToString(reader["position"]) == "cashier")
+                    {
+                        this.Hide();
+                        FormCashier formCashier = new FormCashier();
+                        formCashier.FormClosed += (s, args) => this.Close();
+                        formCashier.Show();
+                    }
+                    if (Convert.ToString(reader["position"]) == "chef")
                     {
                         this.Hide();
                         FormCashier formCashier = new FormCashier();

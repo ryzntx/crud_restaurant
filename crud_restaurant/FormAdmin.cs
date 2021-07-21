@@ -29,7 +29,10 @@ namespace crud_restaurant
 
         private void btn_order_Click(object sender, EventArgs e)
         {
-
+            this.Hide();
+            FormOrder formOrder = new FormOrder();
+            formOrder.FormClosed += (s,args) => this.Close();
+            formOrder.Show();
         }
 
         private void btn_manageMenu_Click(object sender, EventArgs e)
@@ -54,6 +57,14 @@ namespace crud_restaurant
             Login formLogin = new Login();
             formLogin.FormClosed += (s, args) => this.Close();
             formLogin.Show();
+        }
+
+        private void btn_laporan_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            FormReport formReport = new FormReport();
+            formReport.FormClosed += (s, args) => this.Close();
+            formReport.Show();
         }
     }
 }

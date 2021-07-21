@@ -16,5 +16,13 @@ namespace crud_restaurant
         {
             InitializeComponent();
         }
+
+        private void btn_payment_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            FormPayment formPay = new FormPayment();
+            formPay.FormClosed += (s, args) => this.Close();
+            formPay.Show();
+        }
     }
 }
