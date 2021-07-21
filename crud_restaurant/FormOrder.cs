@@ -23,8 +23,8 @@ namespace crud_restaurant
         private void FormOrder_Load(object sender, EventArgs e)
         {
             func_.fun_connection(const_.url_db());
-            func_.fun_read("SELECT name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto, image Image FROM MsMenu", dgv_menu);
-            func_.fun_read("SELECT * FROM OrderDetail", dgv_order);
+            func_.fun_read("SELECT name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto, image Image FROM MsMenu II", dgv_menu);
+            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id; ", dgv_order);
         }
 
         void refresh()
@@ -33,11 +33,6 @@ namespace crud_restaurant
             txb_namaMenu.Clear();
             txb_qty.Clear();
             func_.fun_read("SELECT name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto, image Image FROM MsMenu", dgv_menu);
-        }
-
-        private void btn_insert_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void dgv_menu_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -96,6 +91,16 @@ namespace crud_restaurant
                     func_.fun_read("SELECT name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto, image Image FROM MsMenu", dgv_menu);
                 }
             }
+        }
+
+        private void btn_delete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_insert_Click(object sender, EventArgs e)
+        {
+            //func_.fun_insert("INSERT INTO OrderHeader([id],[employeeId],[memberId],[date]) VALUES('""','1','2',getDate());");
         }
     }
 }

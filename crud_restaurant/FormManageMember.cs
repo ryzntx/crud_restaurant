@@ -31,6 +31,8 @@ namespace crud_restaurant
 
         private void FormManageMember_Load(object sender, EventArgs e)
         {
+            txb_memberID.Visible = false;
+            label2.Visible = false;
             func_.fun_connection(const_.url_db());
             func_.fun_read("SELECT id MemberID, name Nama, email Email, handphone Handphone, joinDate TanggalBergabung FROM MsMember", dgv_manageMember);
         }
@@ -49,10 +51,10 @@ namespace crud_restaurant
 
         private void btn_insert_Click(object sender, EventArgs e)
         {
-            if(txb_memberID.Text != "" && txb_nama.Text != "" && txb_email.Text != "" && txb_handphone.Text != "") 
+            if(txb_nama.Text != "" && txb_email.Text != "" && txb_handphone.Text != "") 
             {
                 if(MessageBox.Show("Tambahkan Member Baru??", "Informasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                func_.fun_insert("INSERT INTO MsMember VALUES('" + int.Parse(txb_memberID.Text) + "', '" + txb_nama.Text + "', '" + txb_email.Text + "', '" + txb_handphone.Text + "', getDate())");
+                func_.fun_insert("INSERT INTO MsMember([name],[email],[handphone],[joinDate]) VALUES('" + txb_nama.Text + "', '" + txb_email.Text + "', '" + txb_handphone.Text + "', getDate())");
                 refresh();
             }
             else

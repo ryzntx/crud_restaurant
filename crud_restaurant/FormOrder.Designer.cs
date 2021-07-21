@@ -132,6 +132,7 @@ namespace crud_restaurant
             this.btn_delete.TabIndex = 16;
             this.btn_delete.Text = "Hapus";
             this.btn_delete.UseVisualStyleBackColor = true;
+            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
             // 
             // dgv_order
             // 

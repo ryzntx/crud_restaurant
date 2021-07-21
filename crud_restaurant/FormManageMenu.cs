@@ -25,8 +25,10 @@ namespace crud_restaurant
 
         private void FormManageMenu_Load(object sender, EventArgs e)
         {
+            label2.Visible = false;
+            txb_menuID.Visible = false;
             func_.fun_connection(const_.url_db());
-            func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu", dgv_mangeMenu);
+            func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
         }
 
         void refresh()
@@ -38,13 +40,13 @@ namespace crud_restaurant
             txb_menuID.Clear();
             txb_namaMenu.Clear();
             txb_protein.Clear();
-            pb_fotoFile.Update();
-            func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu", dgv_mangeMenu);
+            pb_fotoFile.Image = null;
+            func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
         }
 
         private void btn_insert_Click(object sender, EventArgs e)
         {
-            if(txb_menuID.Text != "" && txb_namaMenu.Text != "" && txb_hargaMenu.Text != "" && txb_filePath.Text != "" && txb_carbo.Text != "" && txb_protein.Text != "")
+            if(txb_namaMenu.Text != "" && txb_hargaMenu.Text != "" && txb_filePath.Text != "" && txb_carbo.Text != "" && txb_protein.Text != "")
             {
                 if (MessageBox.Show("Tambahkan Menu Baru??", "Informasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -52,7 +54,7 @@ namespace crud_restaurant
                     try
                     {
                         if (connection.State == ConnectionState.Closed) connection.Open();
-                        string query = "INSERT INTO MsMenu VALUES('" + int.Parse(txb_menuID.Text) + "', '" + txb_namaMenu.Text + "', '" + txb_hargaMenu.Text + "', '" + txb_filePath.Text + "', '" + txb_carbo.Text + "', '" + txb_protein.Text + "', @pic)";
+                        string query = "INSERT INTO MsMenu([name],[price],[carbo],[protein],[photo]) VALUES('" + txb_namaMenu.Text + "', '" + txb_hargaMenu.Text + "', '" + txb_carbo.Text + "', '" + txb_protein.Text + "', @pic)";
                         command = new SqlCommand(query, connection);
                         MemoryStream stream = new MemoryStream();
                         pb_fotoFile.Image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -89,7 +91,7 @@ namespace crud_restaurant
                     try
                     {
                         if (connection.State == ConnectionState.Closed) connection.Open();
-                        string query = "UPDATE MsMenu SET name='" + txb_namaMenu.Text + "', price='" + txb_hargaMenu.Text + "', photo='" + txb_filePath.Text + "', carbo='" + txb_carbo.Text + "', protein='" + txb_protein.Text + "', image=@Pic WHERE id='" + int.Parse(txb_menuID.Text) + "'";
+                        string query = "UPDATE MsMenu SET name='" + txb_namaMenu.Text + "', price='" + txb_hargaMenu.Text + "', carbo='" + txb_carbo.Text + "', protein='" + txb_protein.Text + "', photo=@Pic WHERE id='" + int.Parse(txb_menuID.Text) + "'";
                         command = new SqlCommand(query, connection);
                         MemoryStream stream = new MemoryStream();
                         pb_fotoFile.Image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -167,11 +169,11 @@ namespace crud_restaurant
         {
             if (txb_cari.Text != "")
             {
-                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu WHERE name='" + txb_cari.Text+"' OR price='"+int.Parse(txb_cari.Text)+"' OR carbo='"+int.Parse(txb_cari.Text)+"' OR protein='"+int.Parse(txb_cari.Text)+"' ", dgv_mangeMenu);
+                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='" + txb_cari.Text+"' OR price='"+int.Parse(txb_cari.Text)+"' OR carbo='"+int.Parse(txb_cari.Text)+"' OR protein='"+int.Parse(txb_cari.Text)+"' ", dgv_mangeMenu);
             }
             else
             {
-                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu", dgv_mangeMenu);
+                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
             }
         }
 
@@ -215,11 +217,11 @@ namespace crud_restaurant
             {
                 if (txb_cari.Text != "")
                 {
-                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu WHERE name='" + txb_cari.Text + "' OR price='" + int.Parse(txb_cari.Text) + "' OR carbo='" + int.Parse(txb_cari.Text) + "' OR protein='" + int.Parse(txb_cari.Text) + "' ", dgv_mangeMenu);
+                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='" + txb_cari.Text + "' OR price='" + int.Parse(txb_cari.Text) + "' OR carbo='" + int.Parse(txb_cari.Text) + "' OR protein='" + int.Parse(txb_cari.Text) + "' ", dgv_mangeMenu);
                 }
                 else
                 {
-                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, image Foto FROM MsMenu", dgv_mangeMenu);
+                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
                 }
             }
         }
