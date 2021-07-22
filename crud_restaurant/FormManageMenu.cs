@@ -169,7 +169,7 @@ namespace crud_restaurant
         {
             if (txb_cari.Text != "")
             {
-                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='" + txb_cari.Text+"' OR price='"+int.Parse(txb_cari.Text)+"' OR carbo='"+int.Parse(txb_cari.Text)+"' OR protein='"+int.Parse(txb_cari.Text)+"' ", dgv_mangeMenu);
+                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='"+txb_cari.Text+ "' OR price='" + int.Parse(txb_cari.Text) + "' OR carbo='" + int.Parse(txb_cari.Text) + "' OR protein='" + int.Parse(txb_cari.Text) + "' ", dgv_mangeMenu);
             }
             else
             {

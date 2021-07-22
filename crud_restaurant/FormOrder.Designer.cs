@@ -45,6 +45,7 @@ namespace crud_restaurant
             this.label6 = new System.Windows.Forms.Label();
             this.txb_cari = new System.Windows.Forms.TextBox();
             this.btn_cari = new System.Windows.Forms.Button();
+            this.txb_menuId = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_menu)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb_image)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_order)).BeginInit();
@@ -199,11 +200,19 @@ namespace crud_restaurant
             this.btn_cari.UseVisualStyleBackColor = true;
             this.btn_cari.Click += new System.EventHandler(this.btn_cari_Click);
             // 
+            // txb_menuId
+            // 
+            this.txb_menuId.Location = new System.Drawing.Point(410, 297);
+            this.txb_menuId.Name = "txb_menuId";
+            this.txb_menuId.Size = new System.Drawing.Size(153, 20);
+            this.txb_menuId.TabIndex = 26;
+            // 
             // FormOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 590);
+            this.Controls.Add(this.txb_menuId);
             this.Controls.Add(this.btn_cari);
             this.Controls.Add(this.txb_cari);
             this.Controls.Add(this.label6);
@@ -249,5 +258,6 @@ namespace crud_restaurant
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txb_cari;
         private System.Windows.Forms.Button btn_cari;
+        private System.Windows.Forms.TextBox txb_menuId;
     }
 }
