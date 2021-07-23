@@ -53,7 +53,7 @@ namespace crud_restaurant
         {
             if(txb_nama.Text != "" && txb_email.Text != "" && txb_handphone.Text != "") 
             {
-                if(MessageBox.Show("Tambahkan Member Baru??", "Informasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if(MessageBox.Show("Tambahkan Member Baru??", "Informasi", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                 func_.fun_insert("INSERT INTO MsMember([name],[email],[handphone],[joinDate]) VALUES('" + txb_nama.Text + "', '" + txb_email.Text + "', '" + txb_handphone.Text + "', getDate())");
                 refresh();
             }

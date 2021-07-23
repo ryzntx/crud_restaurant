@@ -29,6 +29,8 @@ namespace crud_restaurant
             txb_menuID.Visible = false;
             func_.fun_connection(const_.url_db());
             func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
+            dgv_mangeMenu.Columns[0].Visible = false;
+            dgv_mangeMenu.Columns[5].Visible = false;
         }
 
         void refresh()
@@ -50,28 +52,9 @@ namespace crud_restaurant
             {
                 if (MessageBox.Show("Tambahkan Menu Baru??", "Informasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    connection = new SqlConnection(const_.url_db());
-                    try
-                    {
-                        if (connection.State == ConnectionState.Closed) connection.Open();
-                        string query = "INSERT INTO MsMenu([name],[price],[carbo],[protein],[photo]) VALUES('" + txb_namaMenu.Text + "', '" + txb_hargaMenu.Text + "', '" + txb_carbo.Text + "', '" + txb_protein.Text + "', @pic)";
-                        command = new SqlCommand(query, connection);
-                        MemoryStream stream = new MemoryStream();
-                        pb_fotoFile.Image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        byte[] pic = stream.ToArray();
-                        command.Parameters.AddWithValue("@Pic", pic);
-                        command.ExecuteNonQuery();
-                        MessageBox.Show("Data Berhasil Ditambahkan", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        refresh();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    finally
-                    {
-                        connection.Close();
-                    }
+                    string query = "INSERT INTO MsMenu([name],[price],[carbo],[protein],[photo]) VALUES('" + txb_namaMenu.Text + "', '" + txb_hargaMenu.Text + "', '" + txb_carbo.Text + "', '" + txb_protein.Text + "', @pic)";
+                    func_.fun_insert_image(query,pb_fotoFile);
+                    refresh();
                     
                 }
             }
@@ -87,28 +70,8 @@ namespace crud_restaurant
             {
                 if (MessageBox.Show("Perbarui Menu Ini??", "Informasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    connection = new SqlConnection(const_.url_db());
-                    try
-                    {
-                        if (connection.State == ConnectionState.Closed) connection.Open();
-                        string query = "UPDATE MsMenu SET name='" + txb_namaMenu.Text + "', price='" + txb_hargaMenu.Text + "', carbo='" + txb_carbo.Text + "', protein='" + txb_protein.Text + "', photo=@Pic WHERE id='" + int.Parse(txb_menuID.Text) + "'";
-                        command = new SqlCommand(query, connection);
-                        MemoryStream stream = new MemoryStream();
-                        pb_fotoFile.Image.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        byte[] pic = stream.ToArray();
-                        command.Parameters.AddWithValue("@Pic", pic);
-                        command.ExecuteNonQuery();
-                        MessageBox.Show("Data Berhasil diperbarui", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        refresh();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    finally
-                    {
-                        connection.Close();
-                    }
+                    string query = "UPDATE MsMenu SET name='" + txb_namaMenu.Text + "', price='" + txb_hargaMenu.Text + "', carbo='" + txb_carbo.Text + "', protein='" + txb_protein.Text + "', photo=@Pic WHERE id='" + int.Parse(txb_menuID.Text) + "'";
+                    func_.fun_insert_image(query, pb_fotoFile);
                     
                 }
             }
@@ -136,40 +99,14 @@ namespace crud_restaurant
 
         private void btn_pickFile_Click(object sender, EventArgs e)
         {
-            Stream myStream = null;
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Image File(*.jpg; *.jpe; *.jpeg; *.bmp; *.png) | *.jpg; *.jpe; *.jpeg; *.bmp; *.png";
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                try
-                {
-                    if((myStream= fileDialog.OpenFile()) != null)
-                    {
-                        string fileName = fileDialog.FileName;
-                        txb_filePath.Text = fileName;
-                        if(myStream.Length > 512000)
-                        {
-                            MessageBox.Show("Ukuran File Terlalu Besar!");
-                        }
-                        else
-                        {
-                            pb_fotoFile.Load(fileName);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    MessageBox.Show(ex.Message);
-                }
-            }
+            func_.fun_pickFile(txb_filePath,pb_fotoFile);
         }
 
         private void btn_cari_Click(object sender, EventArgs e)
         {
             if (txb_cari.Text != "")
             {
-                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='"+txb_cari.Text+ "' OR price='" + int.Parse(txb_cari.Text) + "' OR carbo='" + int.Parse(txb_cari.Text) + "' OR protein='" + int.Parse(txb_cari.Text) + "' ", dgv_mangeMenu);
+                func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='"+txb_cari.Text+ "' OR price='" + txb_cari.Text + "' OR carbo='" + txb_cari.Text + "' OR protein='" + txb_cari.Text + "' ", dgv_mangeMenu);
             }
             else
             {
@@ -196,52 +133,24 @@ namespace crud_restaurant
                 }
                 else
                 {
-                    pb_fotoFile.Image = ConvertByteToArray((byte[])row.Cells[5].Value);
+                    pb_fotoFile.Image = func_.ConvertByteToArray((byte[])row.Cells[5].Value);
                 }
-                
-                
+
+
             }
         }
-
-        public Image ConvertByteToArray(byte[] data)
-        {
-            using (MemoryStream ms = new MemoryStream(data))
-            {
-                return Image.FromStream(ms);
-            }
-        }
-
         private void txb_cari_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 if (txb_cari.Text != "")
                 {
-                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE name='" + txb_cari.Text + "' OR price='" + int.Parse(txb_cari.Text) + "' OR carbo='" + int.Parse(txb_cari.Text) + "' OR protein='" + int.Parse(txb_cari.Text) + "' ", dgv_mangeMenu);
+                    func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu WHERE price='" + Convert.ToInt32(txb_cari.Text) + "' OR carbo='" + Convert.ToInt32(txb_cari.Text)+ "' OR protein='" + Convert.ToInt32(txb_cari.Text) + "' OR name='"+txb_cari.Text+"' ", dgv_mangeMenu);
                 }
                 else
                 {
                     func_.fun_read("SELECT id MenuID, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_mangeMenu);
                 }
-            }
-        }
-
-        void loadImage()
-        {
-            connection = new SqlConnection(const_.url_db());
-            try
-            {
-                if (connection.State == ConnectionState.Closed) connection.Open();
-
-            }
-            catch (Exception ex)
-            {
-
-                
-            }
-            finally
-            {
-
             }
         }
     }

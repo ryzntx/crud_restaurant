@@ -41,10 +41,8 @@ namespace crud_restaurant
         {
             try
             {
-                string value = cmb_orderId.SelectedItem.ToString();
-                label8.Text = $"combobox: {value}";
-
                 func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.Text + "' ", dgv_payment);
+
 
             }
             catch (Exception ex)
@@ -56,27 +54,7 @@ namespace crud_restaurant
         
         void loadComboBox()
         {
-            connection = new SqlConnection(const_.url_db());
-            string query = "SELECT orderId FROM OrderDetail";
-            try
-            {
-                if (connection.State == ConnectionState.Closed) connection.Open();
-                command = new SqlCommand(query,connection);
-                reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    string orderId = Convert.ToString(reader["orderId"]);
-                    cmb_orderId.Items.Add(orderId);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
+            func_.fun_setComboBox(@"SELECT * FROM OrderDetail WHERE status='unpaid' ", cmb_orderId, "orderId", "orderId");
         }
         private void cmb_typePay_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -106,6 +84,13 @@ namespace crud_restaurant
                 txb_cash.Visible = false;
                 label7.Visible = false;
             }
+        }
+
+        private void btn_insert_Click(object sender, EventArgs e)
+        {
+            func_.fun_update(@"UPDATE OrderHeader SET 
+            paymentType='"+cmb_typePay.Text+"', bank='"+cmb_bankName.Text+ "', cardNumber='" + txb_cardNumber.Text+"' WHERE id='"+cmb_orderId.Text+"' ");
+            func_.fun_query(@"UPDATE OrderDetail SET status='Paid' WHERE orderId='"+cmb_orderId.Text+"'");
         }
     }
 }

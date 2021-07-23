@@ -40,10 +40,9 @@ namespace crud_restaurant
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_insert = new System.Windows.Forms.Button();
             this.txb_cash = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.txb_member = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_payment)).BeginInit();
@@ -162,14 +161,15 @@ namespace crud_restaurant
             this.label6.TabIndex = 20;
             this.label6.Text = "Nama Bank";
             // 
-            // button1
+            // btn_insert
             // 
-            this.button1.Location = new System.Drawing.Point(241, 419);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 33);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "Simpan / Cetak";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_insert.Location = new System.Drawing.Point(241, 419);
+            this.btn_insert.Name = "btn_insert";
+            this.btn_insert.Size = new System.Drawing.Size(121, 33);
+            this.btn_insert.TabIndex = 21;
+            this.btn_insert.Text = "Simpan / Cetak";
+            this.btn_insert.UseVisualStyleBackColor = true;
+            this.btn_insert.Click += new System.EventHandler(this.btn_insert_Click);
             // 
             // txb_cash
             // 
@@ -187,16 +187,6 @@ namespace crud_restaurant
             this.label7.Size = new System.Drawing.Size(37, 15);
             this.label7.TabIndex = 23;
             this.label7.Text = "Uang";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(462, 110);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(53, 15);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "Order ID";
             // 
             // txb_member
             // 
@@ -222,10 +212,9 @@ namespace crud_restaurant
             this.ClientSize = new System.Drawing.Size(600, 464);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txb_member);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txb_cash);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn_insert);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -259,10 +248,9 @@ namespace crud_restaurant
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_insert;
         private System.Windows.Forms.TextBox txb_cash;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txb_member;
         private System.Windows.Forms.Label label9;
     }
