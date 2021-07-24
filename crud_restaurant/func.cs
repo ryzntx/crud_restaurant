@@ -204,7 +204,7 @@ namespace crud_restaurant
                 reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    lb.Text = $"{label}: {reader[field].ToString()}";
+                    lb.Text = $"{label}{reader[field].ToString()}";
                 }
             }
             catch (Exception ex)

@@ -29,11 +29,11 @@ namespace crud_restaurant
         {
             func_.fun_connection(const_.url_db());
             func_.fun_read("SELECT id MenuId, name NamaMenu, price Harga, carbo Karbohidrat, protein Protein, photo Foto FROM MsMenu", dgv_menu);
-            func_.fun_read("SELECT tempOrder.id orderid, MsMenu.name NamaMenu, tempOrder.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, tempOrder.total Total FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id; ", dgv_order);
+            func_.fun_read("SELECT tempOrder.id orderid, tempOrder.menuId menuId, MsMenu.name NamaMenu, tempOrder.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, tempOrder.total Total FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id; ", dgv_order);
             txb_menuId.Visible = false;
             dgv_menu.Columns[0].Visible = false;
             dgv_menu.Columns[5].Visible = false;
-            dgv_order.Columns[0].Visible = false;
+            
         }
 
         void refresh()
@@ -42,11 +42,11 @@ namespace crud_restaurant
             txb_namaMenu.Clear();
             txb_qty.Clear();
             pb_image.Image = null;
-            func_.fun_read("SELECT tempOrder.id, MsMenu.name NamaMenu, tempOrder.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, tempOrder.total Total FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id; ", dgv_order);
+            func_.fun_read("SELECT tempOrder.id, tempOrder.menuId, MsMenu.name NamaMenu, tempOrder.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, tempOrder.total Total FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id; ", dgv_order);
             dgv_order.Columns[0].Visible = false;
-            func_.fun_setText("SELECT SUM(carbo) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Karbohidrat", label4,"hasil");
-            func_.fun_setText("SELECT SUM(protein) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Protein", label5,"hasil");
-            func_.fun_setText("SELECT SUM(total) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Total", label6,"hasil");
+            func_.fun_setText("SELECT SUM(carbo) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Karbohidrat: ", label4,"hasil");
+            func_.fun_setText("SELECT SUM(protein) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Protein: ", label5,"hasil");
+            func_.fun_setText("SELECT SUM(total) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Total: ", label6,"hasil");
         }
 
         string total()
@@ -131,11 +131,14 @@ namespace crud_restaurant
 
         private void btn_insert_Click(object sender, EventArgs e)
         {
-            func_.fun_query("INSERT INTO OrderHeader([id],[employeeId],[memberId],[date]) VALUES('"+txb_orderId.Text+ "','1','2',getDate());");
-            func_.fun_insert("INSERT INTO tempOrder([menuId],[qty],[total]) VALUES('" + txb_menuId.Text+"', '"+ txb_qty.Text+"', '"+total()+"')");
-            //func_.fun_insert("INSERT INTO OrderDetail([orderId],[menuId],[qty]) VALUES('" + generateId() + "', '" + txb_menuId.Text + "','" + txb_qty.Text + "')");
-            total();
-            refresh();
+            if (txb_qty.Text != "" && txb_namaMenu.Text != "") 
+            {
+                func_.fun_query("INSERT INTO OrderHeader([id],[employeeId],[memberId],[date]) VALUES('" + txb_orderId.Text + "','1','2',getDate());");
+                func_.fun_insert("INSERT INTO tempOrder([menuId],[qty],[total]) VALUES('" + txb_menuId.Text + "', '" + txb_qty.Text + "', '" + total() + "')");
+                total();
+                refresh();
+            }
+            
         }
         private void btn_insertOrder_Click(object sender, EventArgs e)
         {
@@ -162,7 +165,7 @@ namespace crud_restaurant
             }
             finally
             {
-
+                connection.Close();
             }
             
         }

@@ -10,7 +10,7 @@ namespace crud_restaurant
     {
         public string url_db()
         {
-            string url = @"Data Source=DESKTOP-1VJJQC4\SQLEXPRESS;Initial Catalog=db_restaurant;Integrated Security=True";
+            string url = @"Data Source=LAPTOP-5VKR0F34\SQLEXPRESS;Initial Catalog=db_restaurant;Integrated Security=True";
             return url;
 
         }

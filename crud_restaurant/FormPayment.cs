@@ -34,27 +34,34 @@ namespace crud_restaurant
             label6.Visible = false;
             txb_cash.Visible = false;
             label7.Visible = false;
-            showData();
+            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.SelectedValue + "' ", dgv_payment);
         }
-
-        void showData()
-        {
-            try
-            {
-                func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.Text + "' ", dgv_payment);
-
-
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
-        }
-        
         void loadComboBox()
         {
-            func_.fun_setComboBox(@"SELECT * FROM OrderDetail WHERE status='unpaid' ", cmb_orderId, "orderId", "orderId");
+            func_.fun_setComboBox(@"SELECT DISTINCT TOP 100 orderId FROM OrderDetail WHERE status='unpaid' ", cmb_orderId, "orderId", "orderId");
+        }
+
+        void refresh()
+        {
+            txb_cardNumber.Clear();
+            txb_cash.Clear();
+            txb_member.Clear();
+            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id", dgv_payment);
+            loadComboBox();
+            cmb_orderId.Text = "Pilih OrderId";
+            cmb_typePay.Text = "Pilih Pembayaran";
+            cmb_bankName.Visible = false;
+            txb_cardNumber.Visible = false;
+            label5.Visible = false;
+            label6.Visible = false;
+            txb_cash.Visible = false;
+            label7.Visible = false;
+        }
+        private void cmb_orderId_SelectedValueChanged(object sender, EventArgs e)
+        {
+            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.SelectedValue + "' ", dgv_payment);
+            func_.fun_setText("SELECT SUM(total) hasil FROM OrderDetail WHERE orderId='" + cmb_orderId.SelectedValue + "';", "Total: ", label3, "hasil");
+            func_.fun_setText("SELECT SUM(total) hasil FROM OrderDetail WHERE orderId='" + cmb_orderId.SelectedValue + "';", "", label8, "hasil");
         }
         private void cmb_typePay_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -88,9 +95,41 @@ namespace crud_restaurant
 
         private void btn_insert_Click(object sender, EventArgs e)
         {
-            func_.fun_update(@"UPDATE OrderHeader SET 
-            paymentType='"+cmb_typePay.Text+"', bank='"+cmb_bankName.Text+ "', cardNumber='" + txb_cardNumber.Text+"' WHERE id='"+cmb_orderId.Text+"' ");
-            func_.fun_query(@"UPDATE OrderDetail SET status='Paid' WHERE orderId='"+cmb_orderId.Text+"'");
+            if (cmb_typePay.SelectedIndex == 1)
+            {
+                if (txb_cardNumber.Text != "" && cmb_bankName.Text != "Pilih Nama Bank")
+                {
+                    func_.fun_update(@"UPDATE OrderHeader SET 
+                paymentType='" + cmb_typePay.Text + "', bank='" + cmb_bankName.Text + "', cardNumber='" + txb_cardNumber.Text + "', total='" + label8.Text + "' WHERE id='" + cmb_orderId.Text + "' ");
+                    func_.fun_query(@"UPDATE OrderDetail SET status='Paid' WHERE orderId='" + cmb_orderId.Text + "'");
+                    refresh();
+                }
+                else
+                {
+                    MessageBox.Show("Harap Isi Semua Kolom!!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else if (cmb_typePay.SelectedIndex == 0)
+            {
+                if(txb_cash.Text != "")
+                {
+                    func_.fun_update(@"UPDATE OrderHeader SET 
+            paymentType='" + cmb_typePay.Text + "', bank='" + cmb_bankName.Text + "', cardNumber='" + txb_cardNumber.Text + "', total='" + label8.Text + "' WHERE id='" + cmb_orderId.Text + "' ");
+                    func_.fun_query(@"UPDATE OrderDetail SET status='Paid' WHERE orderId='" + cmb_orderId.Text + "'");
+                    refresh();
+                }
+                else
+                {
+                    MessageBox.Show("Harap Isi Semua Kolom!!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Harap Pilih Metode Pembayaran!!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            
         }
+
+        
     }
 }
