@@ -35,6 +35,8 @@ namespace crud_restaurant
             txb_cash.Visible = false;
             label7.Visible = false;
             func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.SelectedValue + "' ", dgv_payment);
+            func_.fun_setText("SELECT SUM(total) hasil FROM OrderDetail WHERE orderId='" + cmb_orderId.SelectedValue + "';", "Total: ", label3, "hasil");
+            func_.fun_setText("SELECT SUM(total) hasil FROM OrderDetail WHERE orderId='" + cmb_orderId.SelectedValue + "';", "", label8, "hasil");
         }
         void loadComboBox()
         {
@@ -46,7 +48,7 @@ namespace crud_restaurant
             txb_cardNumber.Clear();
             txb_cash.Clear();
             txb_member.Clear();
-            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id", dgv_payment);
+            func_.fun_read("SELECT MsMenu.name NamaMenu, OrderDetail.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, OrderDetail.total Total FROM OrderDetail INNER JOIN MsMenu ON OrderDetail.menuId = MsMenu.id WHERE orderId='" + cmb_orderId.SelectedValue + "' AND status='unpaid' ", dgv_payment);
             loadComboBox();
             cmb_orderId.Text = "Pilih OrderId";
             cmb_typePay.Text = "Pilih Pembayaran";

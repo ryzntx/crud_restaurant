@@ -33,6 +33,8 @@ namespace crud_restaurant
             txb_menuId.Visible = false;
             dgv_menu.Columns[0].Visible = false;
             dgv_menu.Columns[5].Visible = false;
+            dgv_order.Columns[0].Visible = false;
+            dgv_order.Columns[1].Visible = false;
             
         }
 
@@ -44,9 +46,11 @@ namespace crud_restaurant
             pb_image.Image = null;
             func_.fun_read("SELECT tempOrder.id, tempOrder.menuId, MsMenu.name NamaMenu, tempOrder.qty Banyak, MsMenu.carbo Carbo, MsMenu.protein Protein, MsMenu.price Harga, tempOrder.total Total FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id; ", dgv_order);
             dgv_order.Columns[0].Visible = false;
+            dgv_order.Columns[1].Visible = false;
             func_.fun_setText("SELECT SUM(carbo) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Karbohidrat: ", label4,"hasil");
             func_.fun_setText("SELECT SUM(protein) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Protein: ", label5,"hasil");
             func_.fun_setText("SELECT SUM(total) hasil FROM tempOrder INNER JOIN MsMenu ON tempOrder.menuId = MsMenu.id;","Total: ", label6,"hasil");
+
         }
 
         string total()
@@ -61,7 +65,6 @@ namespace crud_restaurant
        
         string generateId()
         {
-            int id = 0;
             string date = DateTime.Now.ToString("yyyyMMdd");
             string hasil = $"{date}{id++.ToString().PadLeft(3,'0')}";
             txb_orderId.Text = hasil;
@@ -70,7 +73,20 @@ namespace crud_restaurant
 
         void checkId()
         {
+            connection = new SqlConnection(const_.url_db());
+            string query = "SELECT COUNT(*) FROM OrderHeader WHERE id=@id";
+            command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@user", txb_orderId.Text);
+            int UserExist = (int)command.ExecuteScalar();
 
+            if (UserExist > 0)
+            {
+                //Username exist
+            }
+            else
+            {
+                generateId();
+            }
         }
 
         private void dgv_menu_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -125,7 +141,7 @@ namespace crud_restaurant
 
         private void btn_delete_Click(object sender, EventArgs e)
         {
-            func_.fun_delete("DELETE FROM tempOrder WHERE='"+txb_menuId.Text+"'");
+            func_.fun_delete("DELETE FROM tempOrder WHERE menuId='"+txb_menuId.Text+"'");
             refresh();
         }
 
@@ -151,11 +167,15 @@ namespace crud_restaurant
                 foreach (DataGridViewRow row in dgv_order.Rows)
                 {
                     if (connection.State == ConnectionState.Closed) connection.Open();
-                    command = new SqlCommand(query, connection);
+                    command = new SqlCommand(@"INSERT INTO OrderDetail([orderId],[menuId],[qty],[status], [total]) VALUES
+                (@order,@menuName ,@qty, 'unpaid', @total)", connection);
                     command.Parameters.AddWithValue("@order", txb_orderId.Text);
-                    command.Parameters.AddWithValue("@name", row.Cells[1].Value);
-                    command.Parameters.AddWithValue("@qty", row.Cells[2].Value);
+                    command.Parameters.AddWithValue("@menuName", row.Cells[1].Value);
+                    command.Parameters.AddWithValue("@qty", row.Cells[3].Value);
+                    command.Parameters.AddWithValue("@total", row.Cells[7].Value);
                     command.ExecuteNonQuery();
+                    refresh();
+                    func_.fun_query("DELETE FROM tempOrder");
                 }
             }
             catch (Exception ex)
@@ -190,8 +210,8 @@ namespace crud_restaurant
                 DataGridViewRow row = this.dgv_order.Rows[e.RowIndex];
                 //populate the textbox from specific value of the coordinates of column and row.
 
-                txb_menuId.Text = row.Cells[0].Value.ToString();
-                txb_namaMenu.Text = row.Cells[1].Value.ToString();
+                txb_menuId.Text = row.Cells[1].Value.ToString();
+                txb_namaMenu.Text = row.Cells[2].Value.ToString();
             }
         }
 
